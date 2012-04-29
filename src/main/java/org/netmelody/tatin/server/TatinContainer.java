@@ -1,5 +1,6 @@
 package org.netmelody.tatin.server;
 
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +21,19 @@ public final class TatinContainer implements Container {
     public void handle(Request req, Response resp) {
         if ("GET".equals(req.getMethod())) {
             handleGet(req, resp);
+        }
+        if ("PUT".equals(req.getMethod())) {
+            handlePut(req, resp);
+        }
+    }
+
+    private void handlePut(Request req, Response resp) {
+        try {
+            final InputStream inputStream = req.getInputStream();
+            state.put(req.getPath().getPath(), ByteStreams.toByteArray(inputStream));
+            inputStream.close();
+        }
+        catch (Exception e) {
         }
     }
 
