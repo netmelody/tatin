@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<project name="my-proj" default="snapshot" basedir=".">
+<project name="tatin" default="snapshot" basedir=".">
 
     <property name="target.version" value="0.0.1"/>
     <property name="build.dir"      value="${basedir}/build"/>
@@ -25,7 +25,7 @@
                 <manifest>
                     <attribute name="Main-Class" value="@{mainclass}"/>
                     <attribute name="Implementation-Title" value="${ant.project.name}"/>
-                    <attribute name="Implementation-Vendor" value="my-domain-name"/>
+                    <attribute name="Implementation-Vendor" value="netmelody"/>
                     <attribute name="Implementation-Version" value="@{moduleversion}"/>
                     <attribute name="Built-By" value="${user.name}"/>
                     <attribute name="Built-Date" value="${build.timestamp}"/>
@@ -48,7 +48,7 @@
                 <formatter type="xml"/>
                 <batchtest fork="yes" todir="${build.dir}/@{testmodulename}.testreport">
                     <zipfileset src="${build.dir}/${ant.project.name}-@{testmodulename}-@{moduleversion}.jar">
-                        <include name="my-domain-name/**/*Test.class"/>
+                        <include name="org.netmelody.tatin/**/*Test.class"/>
                     </zipfileset>
                 </batchtest>
             </junit>
@@ -78,7 +78,7 @@
     </target>
 
     <target name="jar" description="Create Jar files" depends="clean,-version,-pack-deps">
-        <jar-module modulename="main" moduleversion="${version.label}" depsjar="${build.dir}/main-compiledeps.jar" mainclass="my-main-class"/>
+        <jar-module modulename="main" moduleversion="${version.label}" depsjar="${build.dir}/main-compiledeps.jar" mainclass="org.netmelody.tatin.Tatin"/>
         <jar-module modulename="test" moduleversion="${version.label}" depsjar="${build.dir}/test-compiledeps.jar"/>
     </target>
 
