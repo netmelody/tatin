@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="my-proj" default="snapshot" basedir=".">
+
+    <property name="target.version" value="0.0.1"/>
+    <property name="build.dir"      value="${basedir}/build"/>
+    <tstamp><format property="build.number" pattern="yyyyMMddHHmmss" timezone="GMT"/></tstamp>
+    <tstamp><format property="build.timestamp" pattern="yyyy-MM-dd HH:mm:ss" timezone="GMT"/></tstamp>
+
+    <macrodef name="jar-module">
+        <attribute name="modulename"/>
+        <attribute name="moduleversion"/>
+        <attribute name="depsjar"/>
+        <attribute name="mainclass" default=""/>
+        <sequential>
+            <mkdir dir="${build.dir}/@{modulename}.classes"/>
+
+            <javac srcdir="${basedir}/src/@{modulename}/java" destdir="${build.dir}/@{modulename}.classes" includes="**"
+                   includeantruntime="false" encoding="utf-8" source="1.6" target="1.6" debug="true" debuglevel="lines,source"
+                   classpath="@{depsjar}:${build.dir}/${ant.project.name}-main-@{moduleversion}.jar"/>
+
+            <jar destfile="${build.dir}/${ant.project.name}-@{modulename}-@{moduleversion}.jar">
+                <fileset dir="${build.dir}/@{modulename}.classes"/>
+                <fileset dir="${basedir}" includes="LICENSE README.md"/>
+                <zipfileset src="@{depsjar}" excludes="**/META-INF/**"/>
+                <manifest>
+                    <attribute name="Main-Class" value="@{mainclass}"/>
+                    <attribute name="Implementation-Title" value="${ant.project.name}"/>
+                    <attribute name="Implementation-Vendor" value="my-domain-name"/>
+                    <attribute name="Implementation-Version" value="@{moduleversion}"/>
+                    <attribute name="Built-By" value="${user.name}"/>
+                    <attribute name="Built-Date" value="${build.timestamp}"/>
+                </manifest>
+            </jar>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="run-tests">
+        <attribute name="testmodulename"/>
+        <attribute name="moduleversion"/>
+        <sequential>
+            <mkdir dir="${build.dir}/@{testmodulename}.testreport"/>
+            <mkdir dir="${build.dir}/@{testmodulename}.tmp"/>
+            <junit printsummary="yes" haltonfailure="yes" forkmode="once" tempdir="${build.dir}/@{testmodulename}.tmp">
+                <classpath>
+                  <pathelement location="${build.dir}/${ant.project.name}-main-@{moduleversion}.jar"/>
+                  <pathelement location="${build.dir}/${ant.project.name}-@{testmodulename}-@{moduleversion}.jar"/>
+                </classpath>
+                <formatter type="xml"/>
+                <batchtest fork="yes" todir="${build.dir}/@{testmodulename}.testreport">
+                    <zipfileset src="${build.dir}/${ant.project.name}-@{testmodulename}-@{moduleversion}.jar">
+                        <include name="my-domain-name/**/*Test.class"/>
+                    </zipfileset>
+                </batchtest>
+            </junit>
+        </sequential>
+    </macrodef>
+
+    <target name="-version-for-snapshot" unless="version.label">
+        <property name="version.label" value="${target.version}-SNAPSHOT-${build.number}"/>
+    </target>
+
+    <target name="-version-for-release" unless="version.label">
+        <property name="version.label" value="${target.version}"/>
+    </target>
+
+    <target name="-version" depends="-version-for-snapshot,-version-for-release">
+        <echo message="Building version ${version.label}"/>
+    </target>
+
+    <target name="-pack-deps">
+        <zip destfile="${build.dir}/main-compiledeps.jar"><zipgroupfileset dir="${basedir}/vendor/lib" includes="**/*.jar"/></zip>
+        <zip destfile="${build.dir}/test-compiledeps.jar"><zipgroupfileset dir="${basedir}/vendor/buildlib" includes="**/*.jar"/></zip>
+    </target>
+
+    <target name="clean" description="Clean this project">
+        <delete dir="${build.dir}" failonerror="false"/>
+        <mkdir dir="${build.dir}"/>
+    </target>
+
+    <target name="jar" description="Create Jar files" depends="clean,-version,-pack-deps">
+        <jar-module modulename="main" moduleversion="${version.label}" depsjar="${build.dir}/main-compiledeps.jar" mainclass="my-main-class"/>
+        <jar-module modulename="test" moduleversion="${version.label}" depsjar="${build.dir}/test-compiledeps.jar"/>
+    </target>
+
+    <target name="test" description="Test this project" depends="jar">
+        <run-tests testmodulename="test" moduleversion="${version.label}"/>
+    </target>
+
+    <target name="snapshot" description="Create a tested snapshot jar file" depends="test"/>
+    <target name="release" description="Create a tested release jar file" depends="-version-for-release,snapshot"/>
+</project>
