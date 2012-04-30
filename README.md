@@ -1,3 +1,4 @@
+[![][logo]][website] *tasty*
 Tatin
 =====
 
@@ -25,3 +26,6 @@ $ curl --request PUT --header "Content-Length: 0" localhost:8888/bob
 $ curl localhost:8888/demo
 $
 ```
+
+[logo]: https://raw.github.com/netmelody/tatin/master/tatin.png
+[website]: http://netmelody.org/tatin
