@@ -23,4 +23,5 @@ $
 ```bash
 $ curl --request PUT --header "Content-Length: 0" localhost:8888/bob
 $ curl localhost:8888/demo
+$
 ```
