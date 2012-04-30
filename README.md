@@ -3,23 +3,20 @@ Tatin
 
 A stuff drawer implemented in http, tatin lets you get what you put... tat in, tat out.
 
-    $ java -jar tatin.jar 8888
-    tatin started on port 8888
+```
+$ java -jar tatin.jar 8888
+tatin started on port 8888
+```
 
-    GET localhost:8888/foo/bar/baz
-    ""
-    PUT localhost:8888/foo/bar/baz "apples"
-    GET localhost:8888/foo/bar/baz
-    "apples"
-
-    $ curl localhost:8888/demo
-    $ curl --request PUT --header "Content-Length: 0" localhost:8888/bob
-    $ curl localhost:8888/demo
-    $ echo "hello" > hello.txt
-    $ curl --upload-file hello.txt localhost:8888/demo
-      % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                     Dload  Upload   Total   Spent    Left  Speed
-      0     6    0     0    0     6      0    355 --:--:-- --:--:-- --:--:--   400
-    $ curl localhost:8888/demo
-    hello
-    $
+```
+$ curl localhost:8888/demo
+$ curl --request PUT --header "Content-Length: 0" localhost:8888/bob
+$ curl localhost:8888/demo
+$ echo "hello" > hello.txt
+$ curl --upload-file hello.txt localhost:8888/demo
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     6    0     0    0     6      0    355 --:--:-- --:--:-- --:--:--   400
+$ curl localhost:8888/demo
+hello
+$
