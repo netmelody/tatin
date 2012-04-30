@@ -1,7 +1,7 @@
 Tatin
 =====
 
-A stuff drawer implemented in http, tatin lets you get what you put... tat in, tat out.
+A stuff drawer implemented in http, tatin lets you __GET__ what you __PUT__... tat in, tat out.
 
 ```bash
 $ java -jar tatin.jar 8888
