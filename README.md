@@ -22,7 +22,7 @@ $
 ```
 
 ```bash
-$ curl --request PUT --header "Content-Length: 0" localhost:8888/bob
+$ curl --request PUT --header "Content-Length: 0" localhost:8888/demo
 $ curl localhost:8888/demo
 $
 ```
