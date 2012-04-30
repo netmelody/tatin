@@ -10,8 +10,6 @@ tatin started on port 8888
 
 ```
 $ curl localhost:8888/demo
-$ curl --request PUT --header "Content-Length: 0" localhost:8888/bob
-$ curl localhost:8888/demo
 $ echo "hello" > hello.txt
 $ curl --upload-file hello.txt localhost:8888/demo
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
@@ -20,3 +18,9 @@ $ curl --upload-file hello.txt localhost:8888/demo
 $ curl localhost:8888/demo
 hello
 $
+```
+
+```
+$ curl --request PUT --header "Content-Length: 0" localhost:8888/bob
+$ curl localhost:8888/demo
+```
