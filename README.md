@@ -3,12 +3,12 @@ Tatin
 
 A stuff drawer implemented in http, tatin lets you get what you put... tat in, tat out.
 
-```
+```bash
 $ java -jar tatin.jar 8888
 tatin started on port 8888
 ```
 
-```
+```bash
 $ curl localhost:8888/demo
 $ echo "hello" > hello.txt
 $ curl --upload-file hello.txt localhost:8888/demo
@@ -20,7 +20,7 @@ hello
 $
 ```
 
-```
+```bash
 $ curl --request PUT --header "Content-Length: 0" localhost:8888/bob
 $ curl localhost:8888/demo
 ```
