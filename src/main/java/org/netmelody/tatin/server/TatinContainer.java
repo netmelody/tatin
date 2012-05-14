@@ -1,5 +1,6 @@
 package org.netmelody.tatin.server;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -10,9 +11,6 @@ import org.simpleframework.http.Path;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.core.Container;
-
-import com.google.common.base.Optional;
-import com.google.common.io.ByteStreams;
 
 public final class TatinContainer implements Container {
 
@@ -36,23 +34,35 @@ public final class TatinContainer implements Container {
     private void handlePut(Request req, Response resp) {
         try {
             final InputStream inputStream = req.getInputStream();
-            state.put(req.getPath().getPath(), ByteStreams.toByteArray(inputStream));
+            state.put(req.getPath().getPath(), bytesFrom(inputStream));
             inputStream.close();
         }
         catch (Exception e) { }
     }
 
+    private byte[] bytesFrom(InputStream inputStream) throws IOException {
+        final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        final byte[] data = new byte[1024];
+        int nRead;
+        while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
+            buffer.write(data, 0, nRead);
+        }
+        buffer.flush();
+        return buffer.toByteArray();
+    }
+
     private void handleGet(Request req, Response resp) {
         try {
             final OutputStream outputStream = resp.getOutputStream();
-            ByteStreams.copy(ByteStreams.newInputStreamSupplier(valueAt(req.getPath())), outputStream);
+            outputStream.write(valueAt(req.getPath()));
             outputStream.close();
         }
         catch (Exception e) { }
     }
 
     private byte[] valueAt(final Path path) {
-        return Optional.fromNullable(state.get(path.getPath())).or(new byte[0]);
+        final byte[] bs = state.get(path.getPath());
+        return (null == bs) ? new byte[0] : bs;
     }
 
 }
