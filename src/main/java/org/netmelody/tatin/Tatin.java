@@ -13,8 +13,13 @@ public final class Tatin {
             System.exit(1);
         }
         
-        final TatinServer tatinServer = new TatinServer(parseInt(args[0]));
-        System.out.printf("tatin started on port %s", tatinServer.port());
+        try {
+            final TatinServer tatinServer = new TatinServer(parseInt(args[0]));
+            System.out.printf("tatin started on port %s", tatinServer.port());
+        } catch (IOException e) {
+            System.err.println("failed to start tatin on port " + args[0]);
+            System.exit(1);
+        }
     }
 
     private static boolean isValidPort(String portString) {
