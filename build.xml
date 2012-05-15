@@ -116,7 +116,7 @@
         <exec executable="gpg" dir="${build.dir}"><arg value="-ab"/><arg value="${ant.project.name}-${version.label}-javadoc.jar"/></exec>
         <exec executable="gpg" dir="${build.dir}"><arg value="-ab"/><arg value="${ant.project.name}-${version.label}-sources.jar"/></exec>
         <jar destfile="${build.dir}/bundle.jar">
-            <fileset dir="${build.dir}" includes="${ant.project.name}-*"/>
+            <fileset dir="${build.dir}" includes="${ant.project.name}-${version.label}*"/>
         </jar>
     </target>
 </project>
