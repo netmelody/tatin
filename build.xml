@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <project name="tatin" default="snapshot" basedir=".">
 
-    <property name="target.version" value="0.0.1"/>
+    <property name="target.version" value="0.0.2"/>
     <property name="build.dir"      value="${basedir}/build"/>
     <tstamp><format property="build.number" pattern="yyyyMMddHHmmss" timezone="GMT"/></tstamp>
     <tstamp><format property="build.timestamp" pattern="yyyy-MM-dd HH:mm:ss" timezone="GMT"/></tstamp>
@@ -10,7 +10,7 @@
         <attribute name="modulename"/>
         <attribute name="moduleversion"/>
         <attribute name="depsjar"/>
-        <attribute name="mainclass" default=""/>
+        <attribute name="manifest"/>
         <sequential>
             <mkdir dir="${build.dir}/@{modulename}.classes"/>
 
@@ -18,18 +18,14 @@
                    includeantruntime="false" encoding="utf-8" source="1.6" target="1.6" debug="true" debuglevel="lines,source"
                    classpath="@{depsjar}:${build.dir}/${ant.project.name}-main-@{moduleversion}.jar"/>
 
-            <jar destfile="${build.dir}/${ant.project.name}-@{modulename}-@{moduleversion}.jar">
+            <jar destfile="${build.dir}/${ant.project.name}-@{modulename}-@{moduleversion}.jar" manifest="@{manifest}">
                 <fileset dir="${build.dir}/@{modulename}.classes"/>
-                <fileset dir="${basedir}" includes="LICENSE README.md"/>
+                <fileset dir="${basedir}" includes="LICENSE NOTICE README.md"/>
                 <zipfileset src="@{depsjar}" excludes="**/META-INF/**"/>
-                <manifest>
-                    <attribute name="Main-Class" value="@{mainclass}"/>
-                    <attribute name="Implementation-Title" value="${ant.project.name}"/>
-                    <attribute name="Implementation-Vendor" value="netmelody"/>
-                    <attribute name="Implementation-Version" value="@{moduleversion}"/>
-                    <attribute name="Built-By" value="${user.name}"/>
-                    <attribute name="Built-Date" value="${build.timestamp}"/>
-                </manifest>
+            </jar>
+            <jar destfile="${build.dir}/${ant.project.name}-@{modulename}-@{moduleversion}-sources.jar" manifest="@{manifest}">
+                <fileset dir="${basedir}/src/@{modulename}/java"/>
+                <fileset dir="${basedir}" includes="LICENSE NOTICE README.md"/>
             </jar>
         </sequential>
     </macrodef>
@@ -72,14 +68,33 @@
         <zip destfile="${build.dir}/test-compiledeps.jar"><zipgroupfileset dir="${basedir}/vendor/buildlib" includes="**/*.jar"/></zip>
     </target>
 
+    <target name="-jar-javadoc">
+        <mkdir dir="${build.dir}/javadoc"/>
+        <javadoc packagenames="org.netmelody.${ant.project.name}.*" sourcepath="src/main/java" defaultexcludes="yes"
+                 destdir="${build.dir}/javadoc" author="true" version="true" use="true" windowtitle="${ant.project.name}"
+                 classpath="${build.dir}/main-compiledeps.jar" />
+        <jar destfile="${build.dir}/${ant.project.name}-main-${version.label}-javadoc.jar" manifest="${build.dir}/MANIFEST.MF">
+            <fileset dir="${build.dir}/javadoc"/>
+            <fileset dir="${basedir}" includes="LICENSE NOTICE README.md"/>
+        </jar>
+    </target>
+
     <target name="clean" description="Clean this project">
         <delete dir="${build.dir}" failonerror="false"/>
         <mkdir dir="${build.dir}"/>
     </target>
 
     <target name="jar" description="Create Jar files" depends="clean,-version,-pack-deps">
-        <jar-module modulename="main" moduleversion="${version.label}" depsjar="${build.dir}/main-compiledeps.jar" mainclass="org.netmelody.tatin.Tatin"/>
-        <jar-module modulename="test" moduleversion="${version.label}" depsjar="${build.dir}/test-compiledeps.jar"/>
+        <manifest file="${build.dir}/MANIFEST.MF">
+            <attribute name="Main-Class" value="org.netmelody.tatin.Tatin"/>
+            <attribute name="Implementation-Title" value="${ant.project.name}"/>
+            <attribute name="Implementation-Vendor" value="netmelody"/>
+            <attribute name="Implementation-Version" value="${version.label}"/>
+            <attribute name="Built-By" value="${user.name}"/>
+            <attribute name="Built-Date" value="${build.timestamp}"/>
+        </manifest>
+        <jar-module modulename="main" moduleversion="${version.label}" depsjar="${build.dir}/main-compiledeps.jar" manifest="${build.dir}/MANIFEST.MF"/>
+        <jar-module modulename="test" moduleversion="${version.label}" depsjar="${build.dir}/test-compiledeps.jar" manifest="${build.dir}/MANIFEST.MF"/>
     </target>
 
     <target name="test" description="Test this project" depends="jar">
@@ -88,4 +103,20 @@
 
     <target name="snapshot" description="Create a tested snapshot jar file" depends="test"/>
     <target name="release" description="Create a tested release jar file" depends="-version-for-release,snapshot"/>
+    <target name="bundle" description="Create a release bundle for deployment to maven central" depends="release,-jar-javadoc">
+        <copy file="${ant.project.name}.pom" tofile="${build.dir}/${ant.project.name}-${version.label}.pom">
+            <filterset><filter token="VERSION" value="${version.label}"/></filterset>
+        </copy>
+        <move todir="${build.dir}">
+            <fileset dir="${build.dir}" includes="*-main-*"/>
+            <mapper type="regexp" from="(.*)-main-(.*)" to="\1-\2"/>
+        </move>
+        <exec executable="gpg" dir="${build.dir}"><arg value="-ab"/><arg value="${ant.project.name}-${version.label}.pom"/></exec>
+        <exec executable="gpg" dir="${build.dir}"><arg value="-ab"/><arg value="${ant.project.name}-${version.label}.jar"/></exec>
+        <exec executable="gpg" dir="${build.dir}"><arg value="-ab"/><arg value="${ant.project.name}-${version.label}-javadoc.jar"/></exec>
+        <exec executable="gpg" dir="${build.dir}"><arg value="-ab"/><arg value="${ant.project.name}-${version.label}-sources.jar"/></exec>
+        <jar destfile="${build.dir}/bundle.jar">
+            <fileset dir="${build.dir}" includes="${ant.project.name}-*"/>
+        </jar>
+    </target>
 </project>
