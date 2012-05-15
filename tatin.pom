@@ -1,0 +1,29 @@
+ <project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.netmelody.tatin</groupId>
+  <artifactId>tatin</artifactId>
+  <packaging>jar</packaging>
+  <name>Tatin</name>
+  <version>@VERSION@</version>
+  <description>Tatin is a lightweight in-memory HTTP server allowing clients to PUT content to any url and then GET it back.</description>
+  <url>http://netmelody.org/tatin</url>
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <scm>
+    <url>http://github.com/netmelody/tatin</url>
+    <connection>scm:git:git://github.com/netmelody/tatin.git</connection>
+    <developerConnection>scm:git:git@github.com:netmelody/tatin.git</developerConnection>
+  </scm>
+  <developers>
+    <developer>
+      <id>scarytom</id>
+      <name>Tom Denley</name>
+      <email>t.denley@netmelody.org</email>
+    </developer>
+  </developers>
+</project>
