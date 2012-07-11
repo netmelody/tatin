@@ -35,6 +35,10 @@ $ curl localhost:8888/greet
 
 ```
 
+__Headers__
+
+Currently, tatin serves content with a basic set of HTTP headers.  The "Content-Type" header is currently hard-coded to `text/plain`, but a future enhancement may allow for the served content type to match that of the PUT request that created the content.
+
 __License__
 
 Copyright (C) 2012 Tom Denley
