@@ -4,27 +4,22 @@ Tatin
 
 A stuff drawer implemented in http, tatin lets you __GET__ what you __PUT__... tat in, tat out.
 
+#Installation and start-up
 ```bash
+$ wget -O tatin.jar http://search.maven.org/remotecontent?filepath=org/netmelody/tatin/tatin/0.0.2/tatin-0.0.2.jar
 $ java -jar tatin.jar 8888
 tatin started on port 8888
 ```
 
+#Demo
 ```bash
-$ curl localhost:8888/demo
-$ echo "hello" > hello.txt
-$ curl --upload-file hello.txt localhost:8888/demo
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     6    0     0    0     6      0    355 --:--:-- --:--:-- --:--:--   400
-$ curl localhost:8888/demo
-hello
-$
-```
+$ curl -X PUT --data "hello, world" http://localhost:8888/greet
+$ curl http://localhost:8888/greet
+hello, world
 
-```bash
-$ curl --request PUT --header "Content-Length: 0" localhost:8888/demo
+$ curl --request PUT --header "Content-Length: 0" localhost:8888/greet
 $ curl localhost:8888/demo
-$
+
 ```
 
 [logo]: https://raw.github.com/netmelody/tatin/master/tatin.png
