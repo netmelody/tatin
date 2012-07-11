@@ -4,16 +4,16 @@ Tatin
 
 A light-weight in-memory HTTP state machine: *tatin* lets you __GET__ what you __PUT__... tat in, tat out.
 
-__Purpose__
-
+Purpose
+-------
 Tatin aims to provide a trivial record-and-serve service over HTTP.  Essentially, it is a read/write web-server intended for small amounts of dynamic, volatile, information.  If you put lots of data in, it will use lots of memory.  If you bounce it, all your data will be forgotten.
 
-__Implementation__
-
+Implementation
+--------------
 Tatin is implemented in pure Java, and is packaged as a single, standalone, executable jar -- weighing in at around 240K.  Internally, tatin is a few tens of lines of code (yes, that's all) written against the [SimpleWeb] light-weight HTTP framework.
 
-__Installation and start-up__
-
+Installation and start-up
+-------------------------
 tatin is distributed via maven central, so you can [download] from there.
 ```bash
 $ wget -O tatin.jar http://search.maven.org/remotecontent?filepath=org/netmelody/tatin/tatin/0.0.2/tatin-0.0.2.jar
@@ -22,8 +22,8 @@ tatin started on port 8888
 ```
 N.B. tatin does not daemonise by default.
 
-__Usage__
-
+Usage
+-----
 Once started, tatin operates as a HTTP webserver on the specified port:
 ```bash
 $ curl --request PUT --data "hello, world" http://localhost:8888/greet
@@ -35,12 +35,12 @@ $ curl localhost:8888/greet
 
 ```
 
-__Headers__
-
+Headers
+-------
 Currently, tatin serves content with a basic set of HTTP headers.  The "Content-Type" header is currently hard-coded to `text/plain`, but a future enhancement may allow for the served content type to match that of the PUT request that created the content.
 
-__License__
-
+License
+-------
 Copyright (C) 2012 Tom Denley
 
 Distributed under the Apache 2.0 license.
