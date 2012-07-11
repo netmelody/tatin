@@ -4,15 +4,27 @@ Tatin
 
 A light-weight in-memory HTTP state machine: *tatin* lets you __GET__ what you __PUT__... tat in, tat out.
 
+__Purpose__
+
+Tatin aims to provide a trivial record-and-serve service over HTTP.  Essentially, it is a read/write web-server intended for small amounts of dynamic, volatile, information.  If you put lots of data in, it will use lots of memory.  If you bounce it, all your data will be forgotten.
+
+__Implementation__
+
+Tatin is implemented in pure Java, and is packaged as a single, standalone, executable jar -- weighing in at around 240K.  Internally, tatin is a few tens of lines of code (yes, that's all) written against the [SimpleWeb] light-weight HTTP framework.
+
 __Installation and start-up__
+
 tatin is distributed via maven central, so you can [download] from there.
 ```bash
 $ wget -O tatin.jar http://search.maven.org/remotecontent?filepath=org/netmelody/tatin/tatin/0.0.2/tatin-0.0.2.jar
 $ java -jar tatin.jar 8888
 tatin started on port 8888
 ```
+N.B. tatin does not daemonise by default.
 
-__Demo__
+__Usage__
+
+Once started, tatin operates as a HTTP webserver on the specified port:
 ```bash
 $ curl --request PUT --data "hello, world" http://localhost:8888/greet
 $ curl http://localhost:8888/greet
@@ -23,6 +35,13 @@ $ curl localhost:8888/greet
 
 ```
 
+__License__
+
+Copyright (C) 2012 Tom Denley
+
+Distributed under the Apache 2.0 license.
+
 [logo]: https://raw.github.com/netmelody/tatin/master/tatin.png
 [website]: http://netmelody.org/tatin
 [download]: http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.netmelody.tatin%22
+[SimpleWeb]: http://www.simpleframework.org
