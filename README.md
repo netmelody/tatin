@@ -18,7 +18,7 @@ $ curl http://localhost:8888/greet
 hello, world
 
 $ curl --request PUT --header "Content-Length: 0" localhost:8888/greet
-$ curl localhost:8888/demo
+$ curl localhost:8888/greet
 
 ```
 
