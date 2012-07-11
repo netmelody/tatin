@@ -13,7 +13,7 @@ tatin started on port 8888
 
 #Demo
 ```bash
-$ curl -X PUT --data "hello, world" http://localhost:8888/greet
+$ curl --request PUT --data "hello, world" http://localhost:8888/greet
 $ curl http://localhost:8888/greet
 hello, world
 
